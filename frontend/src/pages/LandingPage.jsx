@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import HERO_IMG from "../assets/hero-image.png";
 import { APP_FEATURES } from "../utils/data";
 import { useNavigate } from "react-router-dom";
 import { LuSparkles } from "react-icons/lu";
+import Login from "./Auth/Login";
+import SignUp from "./Auth/SignUp";
+import Modal from "../components/Modal";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -19,7 +22,10 @@ const LandingPage = () => {
         <div className="container mx-auto px-4 pt-6 pb-[200px] relative z-10">
           {/* Header */}
           <header className="flex justify-between mb-16">
-            <div className="text-xl text-black font-bold">PrepMate</div>
+            <div className="flex gap-2 justify-center items-center">
+              <img src="/logo.svg" alt="logo" className="size-7" />
+              <div className="text-2xl text-black font-bold">PrepMate</div>
+            </div>
             <button
               className="bg-linear-to-r from-[#FF9324] to-[#e99a4b] text-sm font-semibold px-7 py-2.5 rounded-full hover:bg-black hover:text-white border border-white transition-colors cursor-pointer"
               onClick={() => {
@@ -65,7 +71,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="w-full min-h-full relative z-20 mb-0">
+      <div className="w-full min-h-full relative z-20">
         <div>
           <section className="flex items-center justify-center -mt-36">
             <img src={HERO_IMG} alt="Hero" className="w-[80vw] rounded-lg" />
@@ -87,7 +93,9 @@ const LandingPage = () => {
                       className="bg-[#FFFEF8] p-6 rounded-xl shadow-xs hover:shadow-lg shadow-amber-100 transition border border-amber-100"
                       key={feature.id}
                     >
-                      <h3 className="text-base font-semibold mb-3">{feature.title}</h3>
+                      <h3 className="text-base font-semibold mb-3">
+                        {feature.title}
+                      </h3>
                       <p className="text-gray-600">{feature.description}</p>
                     </div>
                   ))}
@@ -96,8 +104,13 @@ const LandingPage = () => {
                 {/* Remaining 2 cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {APP_FEATURES.slice(3).map((feature) => (
-                    <div className="bg-[#FFFEF8] p-6 rounded-xl shadow-xs hover:shadow-lg shadow-amber-100 transition border border-amber-100" key={feature.id}>
-                      <h3 className="text-base font-semibold mb-3">{feature.title}</h3>
+                    <div
+                      className="bg-[#FFFEF8] p-6 rounded-xl shadow-xs hover:shadow-lg shadow-amber-100 transition border border-amber-100"
+                      key={feature.id}
+                    >
+                      <h3 className="text-base font-semibold mb-3">
+                        {feature.title}
+                      </h3>
                       <p className="text-gray-600">{feature.description}</p>
                     </div>
                   ))}
@@ -111,6 +124,25 @@ const LandingPage = () => {
           © {new Date().getFullYear()} PrepMate. All rights reserved.
         </div>
       </div>
+
+      <Modal
+        isOpen={openAuthModal}
+        onClose={() => {
+            setOpenAuthModal(false);
+            setCurrentPage("login");
+        }}
+        hideHeader
+      >
+        <div>
+            {currentPage === "login" && (
+                <Login setCurrentPage={setCurrentPage} />
+            )}
+            {currentPage === "signup" && (
+                <SignUp setCurrentPage={setCurrentPage} />
+            )}
+        </div>
+
+      </Modal>
     </>
   );
 };
