@@ -3,7 +3,7 @@ const { registerUser, loginUser, getUserProfile } = require("../controllers/auth
 const { protect } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/uploadMiddleware");
 const router = express.Router();
-
+const {createSession}=require("../controllers/sessionController");
 // Declare variable to store last uploaded image URL
 let lastImageUrl = null;
 
@@ -11,6 +11,7 @@ let lastImageUrl = null;
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/profile", protect, getUserProfile);
+router.post('/create',createSession);
 
 // Upload image to Cloudinary
 router.post("/upload-image", upload.single("image"), async (req, res) => {
