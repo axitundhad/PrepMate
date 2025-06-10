@@ -1,0 +1,12 @@
+const express = require("express");
+const { protect } = require("../middlewares/authMiddleware");
+const router = express.Router();
+const {
+  generateInterviewQuestions,
+  generateConceptExplanation,
+} = require("../controllers/aiController");
+
+router.post("/generate-questions", protect, generateInterviewQuestions);
+router.post("/generate-explanation", protect, generateConceptExplanation);
+
+module.exports = router;

@@ -1,38 +1,35 @@
-const mongoose=require('mongoose');
-const sessionSchema=new mongoose.Schema(
+const mongoose = require("mongoose");
+const sessionSchema = new mongoose.Schema(
   {
-    user:{
-      type:mongoose.Schema.Types.ObjectId,
-      ref:"User",
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
 
-    role:{
-      type:String,
-      required:true,
+    role: {
+      type: String,
+      required: true,
     },
 
-    experience:{
-      type:String,
-      required:true,
-
+    experience: {
+      type: String,
+      required: true,
     },
-     topicsToFocus:{
-      type:String,
-      required:true,
-     },
-     description: String,
-     
+    topicsToFocus: {
+      type: String,
+      required: true,
+    },
+    description: String,
 
-     questions:[
+    questions: [
       {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Question",
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question",
       },
-
-     ]
+    ],
   },
   {
-    timestamps:true,
+    timestamps: true,
   }
 );
-module.exports=mongoose.model("Session",sessionSchema);
+module.exports = mongoose.model("Session", sessionSchema);

@@ -34,7 +34,7 @@ const LandingPage = () => {
           <header className="flex justify-between mb-16">
             <div className="flex gap-2 justify-center items-center">
               <img src="/logo.svg" alt="logo" className="size-7" />
-              <div className="text-2xl text-black font-bold">PrepMate</div>
+              <div className="text-lg md:text-2xl text-black font-bold">PrepMate</div>
             </div>
             {user ? (
               <ProfileInfoCard />
