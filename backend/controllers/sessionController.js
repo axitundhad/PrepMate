@@ -8,15 +8,21 @@ exports.createSession = async (req, res) => {
     const userId = req.user._id;
 
     console.log("Session creation payload:", req.body);
+
+    if (!req.user || !req.user._id) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized user" });
+    }
     console.log("UserId:", req.user._id);
 
-    // const session = await Session.create({
-    //   user: userId,
-    //   role,
-    //   experience,
-    //   topicsToFocus,
-      // description,
-    // });
+    const session = await Session.create({
+      user: userId,
+      role,
+      experience,
+      topicsToFocus,
+      description,
+    });
 
     const questionDocs = await Promise.all(
       questions.map(async (q) => {
@@ -29,8 +35,7 @@ exports.createSession = async (req, res) => {
       })
     );
 
-    // session.questions = questionDocs;
-     const session = await Session.create({
+    console.log("Final session object", {
       user: userId,
       role,
       experience,
@@ -38,10 +43,14 @@ exports.createSession = async (req, res) => {
       description,
       questions: questionDocs,
     });
+    session.questions = questionDocs;
+
     await session.save();
 
+    console.log("Session Created");
     res.status(201).json({ success: true, session });
   } catch (error) {
+    console.error("Error creating session", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

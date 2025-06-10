@@ -1,9 +1,7 @@
-import React from "react";
 import { LuTrash2 } from "react-icons/lu";
 import { getInitials } from "../../utils/helper";
 
 const SummaryCard = ({
-  key,
   colors,
   role,
   topicsToFocus,
@@ -15,11 +13,19 @@ const SummaryCard = ({
   onDelete,
 }) => {
   return (
-    <div className="bg-white border border-gray-300/40 rounded-xl p-2 overflow-hidden cursor-pointer hover:shadow-xl shadow-gray-100 relative group" onClick={onSelect}>
-      <div className="rounded-lg p-4 cursor-pointer relative" style={{ background: colors.bgcolor }}>
+    <div
+      className="bg-white border border-gray-300/40 rounded-xl p-2 overflow-hidden cursor-pointer hover:shadow-xl shadow-gray-100 relative group"
+      onClick={onSelect}
+    >
+      <div
+        className="rounded-lg p-4 cursor-pointer relative"
+        style={{ background: colors.bgcolor }}
+      >
         <div className="flex items-center">
           <div className="flex-shrink-0 size-12 bg-white rounded-md flex items-center justify-center mr-4">
-            <span className="text-lg font-semibold text-black">{getInitials(role)}</span>
+            <span className="text-lg font-semibold text-black">
+              {getInitials(role)}
+            </span>
           </div>
 
           {/* content container */}
@@ -28,7 +34,9 @@ const SummaryCard = ({
               {/* Title and skills */}
               <div>
                 <h2 className="text-[17px] font-medium">{role}</h2>
-                <p className="text-xs font-medium text-gray-900">{topicsToFocus}</p>
+                <p className="text-xs font-medium text-gray-900">
+                  {topicsToFocus}
+                </p>
               </div>
             </div>
           </div>
@@ -51,13 +59,19 @@ const SummaryCard = ({
             Experience: {experience} {experience == 1 ? "Year" : "Years"}
           </div>
 
-          <div className="text-[10px] font-medium text-black px-3 py-1 border-[0.5px] border-gray-900 rounded-full">{questions} Q&A</div>
+          <div className="text-[10px] font-medium text-black px-3 py-1 border-[0.5px] border-gray-900 rounded-full">
+            {questions} Q&A
+          </div>
 
-          <div className="text-[10px] font-medium text-black px-3 py-1 border-[0.5px] border-gray-900 rounded-full">Last Updated: {lastUpdated}</div>
+          <div className="text-[10px] font-medium text-black px-3 py-1 border-[0.5px] border-gray-900 rounded-full">
+            Last Updated: {lastUpdated}
+          </div>
         </div>
 
         {/* Description */}
-        <p className="text-[12px] font-medium text-gray-500 line-clamp-2 mt-3">{description}</p>
+        <p className="text-[12px] font-medium text-gray-500 line-clamp-2 mt-3">
+          {description}
+        </p>
       </div>
     </div>
   );

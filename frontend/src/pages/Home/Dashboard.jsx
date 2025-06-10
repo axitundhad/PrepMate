@@ -42,7 +42,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-7 pb-6 px-4 md:px-0">
           {sessions?.map((data, index) => (
             <SummaryCard
-              key={data?.id}
+              key={data?.id || index}
               colors={CARD_BG[index % CARD_BG.length]}
               role={data.role || ""}
               topicsToFocus={data?.topicsToFocus || ""}
