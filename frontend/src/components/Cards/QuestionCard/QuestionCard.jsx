@@ -1,114 +1,104 @@
 import React from 'react';
 import { useState,useEffect ,useRef } from 'react';
-import { LuChevronDown,LuPin,LuSparkles } from 'react-icons/lu';
+import { LuChevronDown,LuPin,LuSparkles, LuPinOff } from 'react-icons/lu'; // Added LuPinOff
+import AIResponsePreview from '../../AIResponsePreview';
+
 const QuestionCard = ({
-  question,
+  question,   
   answer,
   onLearnMore,
-   isPinned,
-   onTooglePin
+  isPinned,
+  onTogglePin // Corrected prop name to match usage
 }) => {
   const [isExpanded,setIsExpanded]=useState(false);
   const[height,setHeight]=useState(0);
   const contentRef=useRef(null);
- 
+  
   useEffect(()=>{
     if(isExpanded){
       const contentHeight=contentRef.current.scrollHeight;
-      setHeight(contentHeight+10);
+      setHeight(contentHeight + 10); // Added a small padding
     }
     else{
       setHeight(0);
     }
   },[isExpanded])
-   
+    
   const toggleExpand=()=>{
     setIsExpanded(!isExpanded);
-  }
-;
-  return 
-  (
-  
-  <div className='bg-white rounded-lg mb-4 overflow-hidden py-4 px-5 shadow-xl shadow-gray-100/70 border border-gray-100/60 group  '>
-    <div className='flex items-start justify-between cursor-pointer '>
-      <div className='flex items-start gap-3.5'>
-        <span className='text-xs md:text-[15px] font-semibold text-gray-400 leading-[18px]'>
-         0
-        </span>
-        <h3
-         className='text-xs md:text-[14px] font--medium  text-gray-800  mr-0 md:mr-20'
-         onClick={toggleExpand}
-         >
-          {question}
+  };
 
-        </h3>
-         </div>
-         <div className='flex items-center justify-end ml-4 relative'>
+  return (
+    <div className='bg-white rounded-lg mb-4 overflow-hidden py-4 px-5 shadow-xl shadow-gray-100/70 border border-gray-100/60 group'>
+      <div className='flex items-start justify-between cursor-pointer'>
+        <div className='flex items-start gap-3.5'>
+          <span className='text-xs md:text-[15px] font-semibold text-gray-400 leading-[18px]'>
+            0
+          </span>
+          <h3
+            className='text-xs md:text-[14px] font--medium text-gray-800 mr-0 md:mr-20'
+            onClick={toggleExpand}
+          >
+            {question}
+          </h3>
+        </div>
+        <div className='flex items-center justify-end ml-4 relative'>
           <div className={`flex ${
-            isExpanded?"md:flex":"md:hidden group-hover:flex"
+            isExpanded ? "md:flex" : "md:hidden group-hover:flex"
           }`}>
             <button 
-            className='flex items-center  gap-2 text-xs text-indigo-800 font-medium bg-indigo-50 px-3 py-1 mr-2 rounded text-nowrap border border-indigo-50 hover:border-indigo-200  cursor-pointer '
+            className='flex items-center gap-2 text-xs text-indigo-800 font-medium bg-indigo-50 px-3 py-1 mr-2 rounded text-nowrap border border-indigo-50 hover:border-indigo-200 cursor-pointer'
             onClick={onTogglePin}
             >
-
-           {isPinned?(
-            <LuPinOff className="text-xs"/>
-
-           ):(
-            <LuPin className='text-xs'/>
-           )
-          }
+            {isPinned ? (
+              <LuPinOff className="text-xs"/>
+            ) : (
+              <LuPin className='text-xs'/>
+            )}
             </button>
             <button
-            className=' flex items-center gap-2 text-xs text-cyan-800 font-medium bg-cyan-50 px-3 py-1 mr-2 rounded text-nowrap  border-cyan-50 hover:border-cyan-200 cursor-pointer'
+            className='flex items-center gap-2 text-xs text-cyan-800 font-medium bg-cyan-50 px-3 py-1 mr-2 rounded text-nowrap border-cyan-50 hover:border-cyan-200 cursor-pointer'
             onClick={()=>{
               setIsExpanded(true);
               onLearnMore();
             }}
             >
-
               <LuSparkles/>
-              <span className='hidden  md:block'>
+              <span className='hidden md:block'>
                 Learn More
               </span>
             </button>
-       
-       <button
-       className='text-gray-400 hover:text-gray-500 cursor-pointer'
-       onClick={toggleExpand}
-
-       >
-        <LuChevronDown
-         size={20}
-         className={`transform tranisition-tranform duration-300 ${
-         isExpanded ? "rotate-180": ""
-          }`}/>
-
-
-       </button>
-          </div>
-         </div>
-       
-       <div
-        className='overflow-hidden transition-all duration-300 ease-in-out '
+          </div> {/* Closing div for flex utilities */}
+          <button
+          className='text-gray-400 hover:text-gray-500 cursor-pointer'
+          onClick={toggleExpand}
+          >
+            <LuChevronDown
+              size={20}
+              className={`transform transition-transform duration-300 ${
+              isExpanded ? "rotate-180": ""
+              }`}
+            />
+          </button>
+        </div>
+      </div>
+      
+      <div
+        className='overflow-hidden transition-all duration-300 ease-in-out'
         style={{maxHeight:`${height}px`}}
+      >
+        <div 
+        ref={contentRef}
+        className='mt-4 text-gray-700 bg-gray-50 px-5 py-3 rounded-lg' 
         >
 
-       <div 
-       ref={contentRef}
-        className='mt-4 text-gray-700 bg-gray-50 px-5 py-3  rounded-lg' 
-       >
+          
 
-
-       
-
-       </div>
- </div>
- </div>
-<div/>
+          <AIResponsePreview content={answer}/>
+        </div>
+      </div>
+    </div> // Closing div for the main QuestionCard container
   );
-  
 }
 
 export default QuestionCard;
