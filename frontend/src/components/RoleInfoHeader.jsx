@@ -12,7 +12,7 @@ const RoleInfoHeader = ({
     <>
       <div className="bg-white relative">
         {/* Container */}
-        <div className="container mx-auto px-10 lg:px-0">
+        <div className="container mx-auto px-10">
           {/* Main Info Box */}
           <div className="h-[200px] flex flex-col justify-center relative z-10">
             {/* Role and Topics */}
@@ -44,7 +44,7 @@ const RoleInfoHeader = ({
           </div>
 
           {/* Blobs Animation Right Side */}
-          <div className="w-[40vw] md:w-[30vw] h-[200px] flex items-center justify-center bg-white overflow-hidden absolute top-0 right-0">
+          <div className="hidden w-[40vw] md:w-[30vw] h-[200px] sm:flex items-center justify-center bg-white overflow-hidden absolute top-0 right-0">
             <div className="w-16 h-16 bg-lime-400 blur-[65px] animate-blob1" />
             <div className="w-16 h-16 bg-teal-400 blur-[65px] animate-blob2" />
             <div className="w-16 h-16 bg-cyan-300 blur-[45px] animate-blob3" />
