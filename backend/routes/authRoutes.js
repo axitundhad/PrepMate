@@ -20,8 +20,6 @@ router.post("/create", createSession);
 // Upload image to Cloudinary
 router.post("/upload-image", upload.single("image"), async (req, res) => {
   try {
-    console.log("Uploaded file:", req.file);
-
     if (!req.file || !req.file.path) {
       return res.status(400).json({ message: "No file uploaded" });
     }

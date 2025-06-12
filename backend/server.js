@@ -9,15 +9,15 @@ const aiRoutes = require("./routes/aiRoutes");
 const connectDB = require("./config/db");
 const app = express();
 
+connectDB();
+
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.CLIENT_URL || "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-connectDB();
 // Middleware
 app.use(express.json());
 // Routes
@@ -28,10 +28,9 @@ app.use("/api/questions", questionRoutes);
 
 app.use("/api/ai", aiRoutes);
 
-// app.post('api/ai/generate-questions',protect,generateInterviewQuestions);
-// app.post("/api/ai/generate-explanation",protect,generateConceptExplanation);
-
-// app.use("/uploads",express.static(path.join(__dirname,"uploads"),{}));
+app.get("/", (res) => {
+  res.send("Welcome to PrepMate Ai's Backend API!");
+});
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

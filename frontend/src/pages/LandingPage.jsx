@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import HERO_IMG from "../assets/hero-image.png";
+import HERO_IMG from "../assets/Hero_Prep.png";
 import { APP_FEATURES } from "../utils/data";
 import { useNavigate } from "react-router-dom";
 import { LuSparkles } from "react-icons/lu";
@@ -28,13 +28,15 @@ const LandingPage = () => {
   return (
     <>
       <div className="w-full min-h-full bg-[#FFFCEF]">
-        <div className="w-[500px] h-[500px] bg-amber-200/20 blur-[65px] absolute top-0 left-0" />
+        <div className="md:w-[500px] h-[500px] bg-amber-200/20 blur-[65px] absolute top-0 left-0" />
         <div className="container mx-auto px-4 pt-6 pb-[200px] relative z-10">
           {/* Header */}
           <header className="flex justify-between mb-16">
             <div className="flex gap-2 justify-center items-center">
               <img src="/logo.svg" alt="logo" className="size-7" />
-              <div className="text-lg md:text-2xl text-black font-bold">PrepMate</div>
+              <div className="text-xl md:text-3xl text-black font-bold">
+                PrepMate Ai
+              </div>
             </div>
             {user ? (
               <ProfileInfoCard />
@@ -58,7 +60,7 @@ const LandingPage = () => {
                   <LuSparkles /> AI Powered
                 </div>
               </div>
-              <h1 className="text-5xl text-black font-medium mb-6 leading-tight">
+              <h1 className="text-3xl md:text-5xl text-black font-medium mb-6 leading-tight">
                 Ace Interviews with <br />
                 <span className="text-transparent bg-clip-text bg-[linear-gradient(90deg,_#FF9324,_#FCD760,_#FF9324)] bg-[length:200%_200%] bg-[position:0%_50%] animate-text-shine font-semibold">
                   AI-Powered
@@ -88,9 +90,14 @@ const LandingPage = () => {
       <div className="w-full min-h-full relative z-20">
         <div>
           <section className="flex items-center justify-center -mt-36">
-            <img src={HERO_IMG} alt="Hero" className="w-[80vw] rounded-lg" />
+            <img
+              src={HERO_IMG}
+              alt="Hero"
+              className=" max-w-[80vw] md:w-[80vw] rounded-xl shadow-xl border border-gray-200"
+            />
           </section>
         </div>
+        {/* max-w-[80vw] md:w-[80vw] rounded-lg */}
 
         <div className="w-full min-h-full bg-[#FFFCEF] mt-10">
           <div className="container mx-auto px-4 pt-10 pb-20">
@@ -101,7 +108,7 @@ const LandingPage = () => {
 
               <div className="flex flex-col items-center gap-8">
                 {/* First 3 cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
                   {APP_FEATURES.slice(0, 3).map((feature) => (
                     <div
                       className="bg-[#FFFEF8] p-6 rounded-xl shadow-xs hover:shadow-lg shadow-amber-100 transition border border-amber-100"

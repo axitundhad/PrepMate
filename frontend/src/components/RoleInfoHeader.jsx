@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const RoleInfoHeader = ({
   role,
@@ -12,7 +12,7 @@ const RoleInfoHeader = ({
     <>
       <div className="bg-white relative">
         {/* Container */}
-        <div className="container mx-auto px-10 md:px-0">
+        <div className="container mx-auto px-10 lg:px-0">
           {/* Main Info Box */}
           <div className="h-[200px] flex flex-col justify-center relative z-10">
             {/* Role and Topics */}
@@ -21,7 +21,9 @@ const RoleInfoHeader = ({
                 <div className="flex justify-between items-start">
                   <div>
                     <h2 className="text-2xl font-medium">{role}</h2>
-                    <p className="text-sm text-gray-900 mt-1">{topicsToFocus}</p>
+                    <p className="text-sm text-gray-900 mt-1">
+                      {topicsToFocus}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -30,7 +32,7 @@ const RoleInfoHeader = ({
             {/* Tags: Experience, Q&A, Last Updated */}
             <div className="flex items-center gap-3 mt-4">
               <div className="text-[10px] font-semibold text-white bg-black px-3 py-1 rounded-full">
-                Experience: {experience} {experience == 1 ? 'Year' : 'Years'}
+                Experience: {experience} {experience == 1 ? "Year" : "Years"}
               </div>
               <div className="text-[10px] font-semibold text-white bg-black px-3 py-1 rounded-full">
                 {questions} Q & A

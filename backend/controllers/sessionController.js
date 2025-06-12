@@ -7,14 +7,11 @@ exports.createSession = async (req, res) => {
       req.body;
     const userId = req.user._id;
 
-    console.log("Session creation payload:", req.body);
-
     if (!req.user || !req.user._id) {
       return res
         .status(401)
         .json({ success: false, message: "Unauthorized user" });
     }
-    console.log("UserId:", req.user._id);
 
     const session = await Session.create({
       user: userId,
@@ -35,19 +32,10 @@ exports.createSession = async (req, res) => {
       })
     );
 
-    console.log("Final session object", {
-      user: userId,
-      role,
-      experience,
-      topicsToFocus,
-      description,
-      questions: questionDocs,
-    });
     session.questions = questionDocs;
 
     await session.save();
 
-    console.log("Session Created");
     res.status(201).json({ success: true, session });
   } catch (error) {
     console.error("Error creating session", error);
@@ -55,49 +43,6 @@ exports.createSession = async (req, res) => {
   }
 };
 
-// exports.createSession = async (req, res) => {
-//     try {
-//         const { role, experience, topicsToFocus, description, questions } = req.body;
-//         console.log("Request body:", req.body);  // Check the body
-
-//         // const userId = "684474ba4d30f823ec777608";
-//         // const userId = req.user ? req.user._id : null;  // In case there's no protect middleware
-//         if (!userId) {
-//             console.log("User ID not found");
-//             return res.status(400).json({ success: false, message: "User not authenticated" });
-//         }
-
-//         const session = await Session.create({
-//             user: userId,
-//             role,
-//             experience,
-//             topicsToFocus,
-//             description,
-//         });
-
-//         const questionDocs = await Promise.all(
-//             questions.map(async (q) => {
-//                 const question = await Question.create({
-//                     session: session._id,
-//                     question: q.question,
-//                     answer: q.answer,
-//                 });
-//                 return question._id;
-//             })
-//         );
-
-//         session.questions = questionDocs;
-//         await session.save();
-
-//         res.status(201).json({ success: true, session });
-
-//     } catch (error) {
-//         console.log("Error in createSession:", error); // Detailed error log
-//         res.status(500).json({ success: false, message: "Server error", error: error.message });
-//     }
-// };
-
-// ✅ Get My Sessions (Fix: missing `.` before populate)
 exports.getMySessions = async (req, res) => {
   try {
     const sessions = await Session.find({ user: req.user._id })
