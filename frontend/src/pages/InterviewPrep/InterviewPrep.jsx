@@ -1,16 +1,18 @@
-import QuestionCard from "../../components/Cards/QuestionCard/QuestionCard";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
 import moment from "moment";
 import { AnimatePresence, motion } from "framer-motion";
 import { LuCircleAlert, LuListCollapse } from "react-icons/lu";
+import { useState, useEffect } from "react";
+import QuestionCard from "../../components/Cards/QuestionCard/QuestionCard";
 import SpinnerLoader from "../../components/Loader/SpinnerLoader";
 import { API_PATHS } from "../../utils/apiPaths";
 import { toast } from "react-hot-toast";
-import React from 'react';
 import DashboardLayout from "../../components/Layouts/DashboardLayout";
 import RoleInfoHeader from "../../components/RoleInfoHeader";
 import axiosInstance from "../../utils/axiosInstance";
+import AIResponsePreview from "../../components/AIResponsePreview";
+import Drawer from "../../components/Drawer";
+import SkeletonLoader from "../../components/Loader/SkeletonLoader";
 
 const InterviewPrep = () => {
   const { sessionId } = useParams();
@@ -24,7 +26,9 @@ const InterviewPrep = () => {
   // Fetch session data
   const fetchSessionDetailsById = async () => {
     try {
-      const response = await axiosInstance.get(API_PATHS.SESSION.GET_ONE(sessionId));
+      const response = await axiosInstance.get(
+        API_PATHS.SESSION.GET_ONE(sessionId)
+      );
       if (response.data && response.data.session) {
         setSessionData(response.data.session);
       }
@@ -36,33 +40,99 @@ const InterviewPrep = () => {
   };
 
   const generateConceptExplanation = async (question) => {
-    // Implement your logic to generate concept explanation
-    console.log("Generating explanation for:", question);
-    // For demonstration:
-    setExplanation(`Explanation for: ${question}`);
-    setOpenLearnMoreDrawer(true);
+    try {
+      setErrorMsg("");
+      setExplanation(null);
+      setIsLoading(true);
+      setOpenLearnMoreDrawer(true);
+
+      const response = await axiosInstance.post(
+        API_PATHS.AI.GENERATE_EXPLANATION,
+        {
+          question,
+        }
+      );
+
+      if (response.data) {
+        setExplanation(response.data);
+      }
+    } catch (error) {
+      setExplanation(null);
+      setErrorMsg("Failed to generate explanation, Try again later");
+      console.error("Error: ", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toogleQuestionPinStatus = async (questionId) => {
-    // Implement your logic to toggle pin status
-    console.log("Toggling pin status for question:", questionId);
-    // You'd typically make an API call here to update the pin status
-    // and then update the sessionData state
-    toast.success(`Question ${questionId} pin status toggled.`);
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.QUESTION.PIN(questionId)
+      );
+
+      console.log(response);
+
+      if (response.data && response.data.question) {
+        fetchSessionDetailsById();
+      }
+      if (response.data.question.isPinned) {
+        toast.success(`Question Pinned Successfully`);
+      } else {
+        toast.success(`Question Unpinned Successfully`);
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   };
 
   const uploadMoreQuestions = async () => {
-    // Implement your logic to upload more questions
-    console.log("Uploading more questions...");
-    // This would likely involve an API call and updating sessionData
-    toast.info("Attempting to upload more questions.");
+    try {
+      setIsUpdateLoader(true);
+
+      //call AI API to generate question
+      const aiResponse = await axiosInstance.post(
+        API_PATHS.AI.GENERATE_QUESTIONS,
+        {
+          role: sessionData?.role,
+          experience: sessionData?.experience,
+          topicsToFocus: sessionData?.topicsToFocus,
+          numberOfQuestions: 10,
+        }
+      );
+
+      //should be array like [{question, answer}, ...]
+      const generatedQuestions = aiResponse.data;
+
+      const response = await axiosInstance.post(
+        API_PATHS.QUESTION.ADD_TO_SESSION,
+        {
+          sessionId,
+          questions: generatedQuestions,
+        }
+      );
+
+      if (response.data) {
+        toast.success("Added more Q&A!!");
+        fetchSessionDetailsById();
+      }
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("Something went wromg. Please Try again.");
+      }
+    } finally {
+      setIsUpdateLoader(false);
+    }
   };
 
   useEffect(() => {
     if (sessionId) {
       fetchSessionDetailsById();
     }
-  }, [sessionId]); // Added sessionId to dependency array
+    return () => {};
+  }, []); // Added sessionId to dependency array
 
   return (
     <div>
@@ -79,6 +149,7 @@ const InterviewPrep = () => {
               : ""
           }
         />
+
         <div className="container mx-auto pt-4 pb-4 px-4 md:px-0">
           <h2 className="text-lg font-semibold color-black">Interview Q & A</h2>
 
@@ -106,50 +177,59 @@ const InterviewPrep = () => {
                       layout
                       layoutId={`question-${data.id || index}`}
                     >
-                      <QuestionCard
-                        question={data?.question}
-                        answer={data?.answer}
-                        onLearnMore={() =>
-                          generateConceptExplanation(data.question)
-                        }
-                        isPinned={data?.isPinned}
-                        onTogglePin={() => toogleQuestionPinStatus(data._id)}
-                      />
+                      <>
+                        <QuestionCard
+                          question={data?.question}
+                          answer={data?.answer}
+                          onLearnMore={() =>
+                            generateConceptExplanation(data.question)
+                          }
+                          isPinned={data?.isPinned}
+                          onTogglePin={() => toogleQuestionPinStatus(data._id)}
+                        />
+
+                        {!isLoading &&
+                          sessionData?.questions?.length == index + 1 && (
+                            <div className="flex items-center justify-center mt-5">
+                              <button
+                                className="flex items-center gap-3 text-sm text-white font-medium bg-black px-5 py-2 mr-2 rounded text-nowrap cursor-pointer"
+                                disabled={isLoading || isUpdateLoader}
+                                onClick={uploadMoreQuestions}
+                              >
+                                {isUpdateLoader ? (
+                                  <SpinnerLoader />
+                                ) : (
+                                  <LuListCollapse className="text-lg" />
+                                )}{" "}
+                                Load More
+                              </button>
+                            </div>
+                          )}
+                      </>
                     </motion.div>
                   );
                 })}
               </AnimatePresence>
             </div>
-            {/* Conditional rendering for the Learn More drawer/sidebar */}
-            {openLearnMoreDrawer && (
-              <motion.div
-                initial={{ x: "100%", opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: "100%", opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="col-span-12 md:col-span-5 bg-white rounded-lg shadow-xl p-5 border border-gray-100/60"
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Concept Explanation</h3>
-                  <button
-                    onClick={() => setOpenLearnMoreDrawer(false)}
-                    className="text-gray-500 hover:text-gray-700"
-                  >
-                    <LuListCollapse size={20} />
-                  </button>
-                </div>
-                {isLoading ? (
-                  <SpinnerLoader />
-                ) : explanation ? (
-                  <p className="text-gray-700">{explanation}</p>
-                ) : (
-                  <div className="flex items-center text-gray-500">
-                    <LuCircleAlert className="mr-2" />
-                    No explanation available.
-                  </div>
-                )}
-              </motion.div>
-            )}
+          </div>
+
+          <div>
+            <Drawer
+              isOpen={openLearnMoreDrawer}
+              onClose={() => setOpenLearnMoreDrawer(false)}
+              title={!isLoading && explanation?.title}
+            >
+              {errorMsg && (
+                <p className="flex gap-2 text-sm text-amber-600 font-medium">
+                  <LuCircleAlert className="mt-1" />
+                  {errorMsg}
+                </p>
+              )}
+              {isLoading && <SkeletonLoader />}
+              {!isLoading && explanation && (
+                <AIResponsePreview content={explanation?.explanation} />
+              )}
+            </Drawer>
           </div>
         </div>
       </DashboardLayout>
