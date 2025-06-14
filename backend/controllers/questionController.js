@@ -64,6 +64,8 @@ exports.updateQuestionNote = async (req, res) => {
 
     question.note = note || "";
     await question.save();
+
+    res.status(200).json({ success: true, message: "Note updated successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }

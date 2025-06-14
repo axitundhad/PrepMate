@@ -177,13 +177,14 @@ const InterviewPrep = () => {
                     >
                       <>
                         <QuestionCard
-                          question={data?.question}
+                          question={data}
                           answer={data?.answer}
                           onLearnMore={() =>
                             generateConceptExplanation(data.question)
                           }
                           isPinned={data?.isPinned}
                           onTogglePin={() => toogleQuestionPinStatus(data._id)}
+                          onNoteSaved={fetchSessionDetailsById}
                         />
 
                         {!isLoading &&
